@@ -10,10 +10,11 @@ const indexedDocs = [];
 // Read base directory
 const docsBasePath = "./src/docs";
 let docsDirectoryContent = fs.readdirSync(docsBasePath);
-// Remove index.md
-if (docsDirectoryContent.includes("index.md")) {
-    docsDirectoryContent.splice(docsDirectoryContent.indexOf("index.md"), 1);
-}
+console.log(`Has read '${docsBasePath}'`);
+
+// Remove files
+docsDirectoryContent = removeFilesFromDocsDir(docsDirectoryContent);
+console.log(`Found subdirectories in '${docsBasePath}': ${docsDirectoryContent}`);
 
 docsDirectoryContent = docsDirectoryContent.map((subDirectory) => {
     if (fs.lstatSync(`${docsBasePath}/${subDirectory}`).isDirectory()) return `${docsBasePath}/${subDirectory}`;
@@ -22,6 +23,7 @@ docsDirectoryContent = docsDirectoryContent.map((subDirectory) => {
 // Read subdirectories
 docsDirectoryContent.forEach((subDirectory) => {
     const subDirectoryDocuments = fs.readdirSync(subDirectory);
+    console.log(`Found documents in '${subDirectory}': ${subDirectoryDocuments}`);
 
     let indexedSubDirectoryDocuments = [];
 
@@ -31,6 +33,7 @@ docsDirectoryContent.forEach((subDirectory) => {
         if (fs.lstatSync(`${subDirectory}/${document}`).isFile() && path.extname(document) === ".md") {
             const indexedFile = indexingDocument(`${subDirectory}/${document}`);
             indexedSubDirectoryDocuments.push(indexedFile);
+            console.log(`Document '${document}' in '${subDirectory}' indexed.`);
         }
     }
     indexedDocs.push({
@@ -41,6 +44,15 @@ docsDirectoryContent.forEach((subDirectory) => {
 
 // Write into file
 fs.writeFileSync("./src/assets/json/indexed_docs_directory.json", JSON.stringify(indexedDocs));
+
+function removeFilesFromDocsDir(docsDir) {
+    const result = [];
+    docsDir.forEach((x) => {
+        if (fs.lstatSync(`${docsBasePath}/${x}`).isDirectory()) result.push(x);
+        else console.log(`Removed: ${x}`);
+    });
+    return result;
+}
 
 function formatTitle(title) {
     title = title[0].toUpperCase() + title.substring(1);
@@ -251,18 +263,6 @@ function calculateTermFrequency(content) {
 }
 
 function calculateDocumentFrequency(tokens) {
-    // Read base directory
-    const docsBasePath = "./src/docs";
-    let docsDirectoryContent = fs.readdirSync(docsBasePath);
-    // Remove index.md
-    if (docsDirectoryContent.includes("index.md")) {
-        docsDirectoryContent.splice(docsDirectoryContent.indexOf("index.md"), 1);
-    }
-
-    docsDirectoryContent = docsDirectoryContent.map((subDirectory) => {
-        if (fs.lstatSync(`${docsBasePath}/${subDirectory}`).isDirectory()) return `${docsBasePath}/${subDirectory}`;
-    });
-
     // Read subdirectories
     docsDirectoryContent.forEach((subDirectory) => {
         const subDirectoryDocuments = fs.readdirSync(subDirectory);
