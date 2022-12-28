@@ -93,7 +93,7 @@ function emitPath() {
                 background-position: 0;
             }
             100% {
-                background-position: 100vh;
+                background-position: 90vh;
             }
         }
     }

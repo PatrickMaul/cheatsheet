@@ -23,6 +23,105 @@ const states = reactive({
     lightMode: true,
 });
 
+function addFragments(preRenderedMarkdownFile) {
+    const headlineLists = [
+        preRenderedMarkdownFile.querySelectorAll("h2"),
+        preRenderedMarkdownFile.querySelectorAll("h3"),
+    ];
+
+    headlineLists.forEach((headlineList) => {
+        headlineList.forEach((element) => {
+            element.id = element.innerText.toLowerCase().replaceAll(" ", "-");
+
+            let copiedElement = element.cloneNode(true);
+
+            const link = document.createElement("a");
+            link.href = `#${element.id}`;
+            link.classList.add("fragment-link");
+            link.append(copiedElement);
+
+            const fragment = document.createElement("span");
+            fragment.classList.add("material-symbols-outlined");
+            fragment.innerText = "link";
+            link.appendChild(fragment);
+
+            preRenderedMarkdownFile.body.replaceChild(link, element);
+        });
+    });
+
+    return preRenderedMarkdownFile;
+}
+
+function addAttributes(preRenderedMarkdownFile) {
+    const elementListConfigs = [
+        {
+            elementTag: "h1",
+            class: "site-title",
+        },
+        {
+            elementTag: "h2",
+            class: "headline",
+        },
+        {
+            elementTag: "h3",
+            class: "sub-headline",
+        },
+        {
+            elementTag: "p",
+            class: "paragraph",
+            children: [
+                {
+                    elementTag: "code",
+                    class: "inline-code",
+                },
+            ],
+        },
+        {
+            elementTag: "ul",
+            class: "list",
+            children: [
+                {
+                    elementTag: "li",
+                    class: "list-item",
+                },
+            ],
+        },
+        {
+            elementTag: "pre",
+            class: "code-block",
+        },
+        {
+            elementTag: "a",
+            class: "link",
+        },
+    ];
+
+    elementListConfigs.forEach((config) => {
+        const elements = preRenderedMarkdownFile.querySelectorAll(config.elementTag);
+        if (config.elementTag === "h1" && elements.length === 1) {
+            elements[0].id = "site-title";
+            const siteTitle = elements[0].innerText;
+            document.title = siteTitle === "Cheat sheet" ? `${siteTitle} | Home` : `Cheat sheet | ${siteTitle}`;
+        } else if (config.elementTag === "h1" && elements.length === 0) {
+            document.title = "Cheat sheet | Doc";
+        } else {
+            elements.forEach((element) => {
+                element.classList.add(config.class);
+
+                if (config.children) {
+                    config.children.forEach((child) => {
+                        const childElements = preRenderedMarkdownFile.querySelectorAll(child.elementTag);
+                        childElements.forEach((childElement) => {
+                            childElement.classList.add(child.class);
+                        });
+                    });
+                }
+            });
+        }
+    });
+    return preRenderedMarkdownFile;
+}
+
 // Render function
 async function renderMarkdownFile() {
     const md = markdown;
@@ -30,59 +129,12 @@ async function renderMarkdownFile() {
 
     const path = urlQuery ? "/" + urlQuery : "/src/docs/index.md";
     const rawMarkdownFile = (await http.get(path)).data;
-    const preRenderedMarkdownFile = new DOMParser().parseFromString(
+    let preRenderedMarkdownFile = new DOMParser().parseFromString(
         addCopyElementToPreElements(md.render(rawMarkdownFile)),
         "text/html"
     );
-    const siteTitleElement = preRenderedMarkdownFile.querySelector("h1");
-    const headlines = preRenderedMarkdownFile.querySelectorAll("h2");
-    const subHeadlines = preRenderedMarkdownFile.querySelectorAll("h3");
-    const paragraphs = preRenderedMarkdownFile.querySelectorAll("p");
-    const lists = preRenderedMarkdownFile.querySelectorAll("ul");
-    const codeBlocks = preRenderedMarkdownFile.querySelectorAll("pre");
-    const links = preRenderedMarkdownFile.querySelectorAll("a");
-
-    if (siteTitleElement) {
-        siteTitleElement.id = "site-title";
-        const siteTitle = siteTitleElement.innerText;
-        document.title = siteTitle === "Cheat sheet" ? `${siteTitle} | Home` : `Cheat sheet | ${siteTitle}`;
-    } else document.title = "Cheat sheet | Doc";
-    if (headlines) {
-        headlines.forEach((headline) => {
-            headline.classList.add("headline");
-        });
-    }
-    if (subHeadlines) {
-        subHeadlines.forEach((subHeadline) => {
-            subHeadline.classList.add("sub-headline");
-        });
-    }
-    if (paragraphs) {
-        paragraphs.forEach((paragraph) => {
-            paragraph.classList.add("paragraph");
-            paragraph.querySelectorAll("code").forEach((code) => {
-                code.classList.add("inline-code");
-            });
-        });
-    }
-    if (lists) {
-        lists.forEach((list) => {
-            list.classList.add("list");
-            list.querySelectorAll("li").forEach((li) => {
-                li.classList.add("list-item");
-            });
-        });
-    }
-    if (codeBlocks) {
-        codeBlocks.forEach((codeBlock) => {
-            codeBlock.classList.add("code-block");
-        });
-    }
-    if (links) {
-        links.forEach((link) => {
-            link.classList.add("link");
-        });
-    }
+    preRenderedMarkdownFile = addAttributes(preRenderedMarkdownFile);
+    preRenderedMarkdownFile = addFragments(preRenderedMarkdownFile);
 
     document.querySelector("main#content").innerHTML = preRenderedMarkdownFile.querySelector("body").innerHTML;
 
