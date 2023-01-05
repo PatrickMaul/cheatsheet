@@ -1,24 +1,29 @@
 <template lang="pug">
-#navigation-drawer(:class="{'active':props.activeNavigation}", @click.self="closeNavigation")
-    .content-wrapper.flex
-        p.inactive-msg.pointer(v-if="!props.activeNavigation", @click="emit('update:activeNavigation', true)") Click to open navigation bar
+#navigation-drawer(:class="{'active':props.activeNavigation}")
+    .top-bar.flex
+        circleIconButton.burger-menu(:icon="'menu'", :tooltip="'Open menu'", icon-size-class="large", @click="emit('update:activeNavigation', !props.activeNavigation);")
+        h2.nav-title.pointer.text-ellipsis(@click="resetURLState") Cheat sheet
+        .flex-filler
+        circleIconButton.theme-switch(:icon="'brightness_4'", :tooltip="'Switch theme'", icon-size-class="large",  @click="toggleTheme")
+        circleIconButton.search-button(:icon="'search'", :tooltip="'Open Search'", icon-size-class="large", @click="emit('update:activeSearch', true)")
+    
+    .expansion-bar
+        //- For toolbox uncomment following lines
+        //- these file [15f.] $ [74ff.]
+        //- _variable.scss [19] & [22]
 
-        .inner-wrapper.flex.column(v-show="props.activeNavigation")
-            h2.nav-title.pointer(@click="resetURLState") Cheat sheet
-            primary-button.search-btn(label="Open search", icon-left="search", @click="emit('update:activeSearch', true)")
-            navigation-list(@path-updated="emitPath")
-            .flex-filler
-            primary-button.theme-switch-btn(label="Switch theme", icon-right="brightness_4", icon-left="brightness_4", @click="emit('update:appTheme')")
-            primary-button.collapse-navigation-btn(label="Collapse navigation", icon-left="keyboard_double_arrow_left", icon-right="keyboard_double_arrow_left", @click="closeNavigation")
-            .legals.flex
-                a(href="?path=src/docs/imprint.md") Imprint
+        //- .tools.flex
+        //-     .flex-filler
+        
+        navigation-list(@path-updated="emitPath")
+        .legals.flex
+            a.text-ellipsis(href="?path=src/docs/imprint.md") Imprint
 </template>
 
 <script setup>
 // Components
 import navigationList from "./navigationList.vue";
-import primaryButton from "./core/buttons/primaryButton.vue";
-import { computed } from "@vue/runtime-core";
+import circleIconButton from "./core/buttons/circleIconButton.vue";
 
 // Defining props & emits
 const props = defineProps(["activeNavigation", "activeSearch"]);
@@ -30,98 +35,69 @@ function closeNavigation() {
 }
 function resetURLState() {
     window.history.replaceState(null, document.title, "/cheetsheet/");
-    closeNavigation();
-    emit("pathUpdated");
+    emitPath();
 }
 function emitPath() {
     closeNavigation();
     emit("pathUpdated");
 }
+function toggleTheme() {
+    closeNavigation();
+    emit("update:appTheme");
+}
 </script>
 
 <style lang="scss" scoped>
 #navigation-drawer {
-    width: calc(
-        $navigation-drawer-width-inactive - $navigation-drawer-inner-padding * 2 - $navigation-drawer-border-width
-    );
-    height: 100vh;
-    position: fixed;
-    z-index: 10;
+    width: 100%;
+    max-width: 100vw;
 
-    background: $navigation-drawer-background-color;
-    color: $white;
-    .content-wrapper {
-        width: $navigation-drawer-inner-width-inactive;
-        padding: $navigation-drawer-inner-padding;
-        border-right: $navigation-drawer-border-width solid $primary-color-darker;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        overflow: hidden;
-        justify-content: space-around;
+    background: $cs-nd-inner-background-color;
+    color: $cs-white;
 
-        background-color: $navigation-drawer-inner-background-color;
+    .top-bar {
+        height: $cs-nd-height;
+        padding: $cs-padding;
 
-        transition: all 0.3s ease-in-out;
+        align-items: center;
 
-        p.inactive-msg {
-            text-transform: uppercase;
-            font-weight: 1000;
-            letter-spacing: 4px;
-            word-spacing: 6px;
-            font-size: 2rem;
-            transform-origin: center;
-            transform: rotate(-90deg);
-            min-width: max-content;
-            margin: auto 0;
-            background: linear-gradient(
-                to right,
-                #{$secondary-color-lighter}be 0%,
-                $secondary-color-lighter 5%,
-                #{$secondary-color-lighter}be 15%
-            );
-            background-position: 0;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 4s infinite linear;
-            animation-fill-mode: forwards;
+        .nav-title {
+            margin: 0 0 0 1rem;
         }
+    }
 
-        @keyframes shine {
-            0% {
-                background-position: 0;
-            }
-            100% {
-                background-position: 90vh;
+    .expansion-bar {
+        height: 0;
+        padding: $cs-padding;
+        display: none;
+
+        // .tools {
+        //     height: $cs-nd-tools-height;
+        // }
+
+        .legals {
+            box-sizing: content-box;
+            height: $cs-nd-legals-height;
+            padding-top: $cs-nd-legals-padding-top;
+
+            border-top: $cs-border-width solid $cs-white;
+            align-content: center;
+            a {
+                margin: auto 0;
+                width: 100%;
+                height: max-content;
+                text-align: center;
+                color: inherit;
+                text-decoration: none;
             }
         }
     }
 
     // Active Navigation
     &.active {
-        width: 100vw;
-        .content-wrapper {
-            width: 256px;
-            justify-content: start;
-            flex-direction: column;
-
-            .inner-wrapper {
-                height: 100%;
-                .nav-title {
-                    margin: 0 0 1rem 0;
-                    font-size: 2rem;
-                    text-align: center;
-                    white-space: nowrap;
-                }
-                .legals {
-                    margin: auto;
-                }
-            }
-
-            .theme-switch-btn {
-                margin: 0 0 0.5rem 0;
-            }
+        .expansion-bar {
+            height: calc(100vh - $cs-nd-height);
+            display: block;
         }
     }
 }

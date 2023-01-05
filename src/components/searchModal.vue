@@ -187,12 +187,12 @@ onMounted(() => {
     z-index: 50;
     width: 100vw;
     height: 100vh;
-    background-color: $navigation-drawer-background-color; // dark semi-transparent
-    color: $black;
+    background-color: $cs-nd-overlay-background; // dark semi-transparent
+    color: $cs-black;
 
     .card {
         margin: auto;
-        padding: $app-padding;
+        padding: $cs-padding;
         background-color: #ffffff;
         width: 600px;
         height: 600px;
@@ -200,7 +200,7 @@ onMounted(() => {
         box-shadow: 2px 2px 15px #ffffff80; // TODO: make it prettier
         .card-header {
             position: relative;
-            padding: 0 0 $app-padding 0;
+            padding: 0 0 $cs-padding 0;
             .close-btn {
                 position: absolute;
                 top: 0;
@@ -221,18 +221,18 @@ onMounted(() => {
             .searchbar {
                 width: 100%;
                 font-size: 18px;
-                padding: $app-padding;
+                padding: $cs-padding;
 
                 &:focus {
-                    outline-color: $primary-color-lighter;
+                    outline-color: $cs-primary-color-lighter;
                 }
             }
         }
         .card-body {
             height: 433px;
-            overflow-y: scroll;
-            border-top: 1px solid $primary-color;
-            padding: $app-padding 0 0 0;
+            overflow-y: auto;
+            border-top: 1px solid $cs-primary-color;
+            padding: $cs-padding 0 0 0;
 
             ul {
                 padding: 0;
@@ -240,15 +240,15 @@ onMounted(() => {
                 list-style-type: none;
 
                 .recent-search-result {
-                    border: 2px solid $primary-color;
+                    border: 2px solid $cs-primary-color;
                     border-radius: 3px;
-                    padding: $app-padding;
-                    margin: 0 0 $app-padding 0;
+                    padding: $cs-padding;
+                    margin: 0 0 $cs-padding 0;
                 }
             }
         }
         .card-footer {
-            border-top: 1px solid $primary-color;
+            border-top: 1px solid $cs-primary-color;
             .fuse-banner {
                 height: 48px;
                 align-items: center;

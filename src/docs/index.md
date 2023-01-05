@@ -10,11 +10,10 @@ Since the cheat sheet was developed for private use only, we apologize for any i
 
 ## Changelog
 Records the history of all changes made to the project.
-### 0.3.2 => Currently under development
-Upcoming features:
-- A few changes to the repository 
-- Maybe new responsive design
-- Hopefully new docs
+### 0.3.2
+New responsive design, for better usability.
+
+Version `0.3.2` was deployed on **6th January, 2023**
 ### 0.3.1
 Added fragments beside each headline.
 

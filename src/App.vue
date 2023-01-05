@@ -1,7 +1,8 @@
 <template lang="pug">
 navigation-drawer(v-model:activeSearch="states.activeSearch", v-model:activeNavigation="states.activeNavigation", @path-updated="renderMarkdownFile()", @update:appTheme="toggleTheme()")
 search-modal(v-model:active="states.activeSearch", @close-navigation="closeNavigationAndResetSearchValue" @path-updated="renderMarkdownFile()")
-main#content(:class="{'no-scroll':states.activeNavigation}")
+main(v-show="!states.activeNavigation")
+    #rendered-markdown-file
 </template>
 
 <script setup>
@@ -39,6 +40,10 @@ function addFragments(preRenderedMarkdownFile) {
             link.href = `#${element.id}`;
             link.classList.add("fragment-link");
             link.append(copiedElement);
+
+            let filler = document.createElement("div");
+            filler.classList.add("flex-filler");
+            link.append(filler);
 
             const fragment = document.createElement("span");
             fragment.classList.add("material-symbols-outlined");
@@ -110,7 +115,7 @@ function addAttributes(preRenderedMarkdownFile) {
 
                 if (config.children) {
                     config.children.forEach((child) => {
-                        const childElements = preRenderedMarkdownFile.querySelectorAll(child.elementTag);
+                        const childElements = element.querySelectorAll(child.elementTag);
                         childElements.forEach((childElement) => {
                             childElement.classList.add(child.class);
                         });
@@ -136,7 +141,8 @@ async function renderMarkdownFile() {
     preRenderedMarkdownFile = addAttributes(preRenderedMarkdownFile);
     preRenderedMarkdownFile = addFragments(preRenderedMarkdownFile);
 
-    document.querySelector("main#content").innerHTML = preRenderedMarkdownFile.querySelector("body").innerHTML;
+    document.querySelector("main #rendered-markdown-file").innerHTML =
+        preRenderedMarkdownFile.querySelector("body").innerHTML;
 
     const clipboard = new ClipboardJs(".clipboard", {
         text: (preIconElement) => {
@@ -188,16 +194,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-#content {
-    max-width: 900px;
-    min-height: 100vh;
-    margin: 0 auto;
-    padding: $app-padding;
-    padding-left: $navigation-drawer-width-inactive + $app-padding;
-
-    &.no-scroll {
-        height: calc(100vh - $app-padding * 2);
-        overflow: hidden;
-    }
+#rendered-markdown-file {
+    max-width: $cs-rmf-max-width;
+    padding: $cs-rmf-padding;
+    margin: auto;
 }
 </style>

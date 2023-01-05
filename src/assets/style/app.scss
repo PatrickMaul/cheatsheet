@@ -1,7 +1,10 @@
 @import "variables";
+@import "markdown-styles.scss";
+// Fonts
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900;1000&family=Roboto+Mono&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 
+// General
 * {
     box-sizing: border-box;
 }
@@ -11,90 +14,18 @@ body {
     font-family: "Nunito", sans-serif;
 }
 
+#app {
+    min-height: 100vh;
+}
+
 .light {
-    background-color: $white;
-    color: $black;
+    background-color: $cs-app-light;
+    color: $cs-font-light;
 }
 
 .dark {
-    background-color: $black;
-    color: $white;
-}
-
-// Markdown files
-#content {
-    #site-title {
-        margin: 2rem 0 1.5rem 0;
-
-        &:after {
-            content: "";
-            display: block;
-            height: $app-border-width;
-            background-color: #000;
-        }
-    }
-    a.fragment-link {
-        color: inherit;
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-
-        .headline {
-            margin: 1.5rem 0 0.9rem 0;
-            & + span {
-                margin: 0 0 -10px 0.5rem;
-                opacity: 0;
-                transition: all 0.2s ease-in-out;
-            }
-        }
-
-        .sub-headline {
-            margin: 1rem 0 0.5rem 0;
-            & + span {
-                margin: 0 0 -6px 0.5rem;
-                opacity: 0;
-                transition: opacity 0.2s ease-in-out;
-                transition: color 0.1s ease-in-out;
-            }
-        }
-
-        &:hover span {
-            opacity: 1;
-        }
-
-        &:visited span {
-            color: $secondary-color;
-        }
-    }
-    .paragraph {
-        margin: 0.3rem 0 0.3rem 0;
-    }
-    .list {
-        margin: 0.3rem 0 0.3rem 0;
-    }
-    .code-block {
-        border-radius: $app-border-radius;
-        padding: $app-padding;
-        background-color: #cccccc;
-        margin: 0.3rem 0 0.3rem 0;
-        code {
-            font-size: 12px;
-            font-family: "Roboto Mono", monospace;
-        }
-    }
-    .inline-code {
-        color: orange;
-        font-size: 12px;
-        font-weight: 600;
-        font-family: "Roboto Mono", monospace;
-    }
-}
-// Links
-a:not(.fragment-link) {
-    color: $primary-color;
-    &:visited {
-        color: $secondary-color;
-    }
+    background-color: $cs-app-dark;
+    color: $cs-font-dark;
 }
 
 // Helpers
@@ -104,34 +35,22 @@ a:not(.fragment-link) {
     &.column {
         flex-direction: column;
     }
-
-    .flex-filler {
-        flex: 1;
-    }
 }
+.flex-filler {
+    flex: 1;
+}
+
 .pointer {
     cursor: pointer;
 }
+
 hr.divider {
     height: 1px;
-    background-color: $primary-color;
+    background-color: $cs-primary-color;
 }
 
-// Code blocks
-pre {
-    position: relative;
-
-    .material-symbols-outlined {
-        display: none;
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        cursor: pointer;
-    }
-
-    &:hover {
-        .material-symbols-outlined {
-            display: block;
-        }
-    }
+.text-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

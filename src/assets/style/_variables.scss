@@ -1,32 +1,25 @@
-// Global
-$app-padding: 8px;
-$app-border-radius: 3px;
-$app-border-width: 1px;
+@import "colors.scss";
+// LEGEND
+// cs = cheat sheet
+// rmf = rendered markdown file
+// nd = navigation drawer
 
-// Colors
-$white: #fdfffc;
-$black: #0d0221;
-$primary-color: #023047;
-$primary-color-lighter: mix(white, $primary-color, 50%);
-$primary-color-darker: mix(black, $primary-color, 20%);
-$secondary-color: #ffb703;
-$secondary-color-lighter: mix(white, $secondary-color, 50%);
-$secondary-color-darker: mix(black, $secondary-color, 20%);
+// Global
+$cs-padding: 8px;
+$cs-border-radius: 3px;
+$cs-border-width: 1px;
+
+// Rendered markdown file
+$cs-rmf-max-width: 900px;
+$cs-rmf-padding: $cs-padding $cs-padding $cs-padding * 3 $cs-padding;
 
 // Navigation drawer
-$navigation-drawer-inner-width-inactive: 56px;
-$navigation-drawer-inner-padding: $app-padding;
-$navigation-drawer-inner-border-width: 2px;
-$navigation-drawer-inner-background-color: $primary-color;
+$cs-nd-height: 56px;
+$cs-nd-inner-background-color: $cs-primary-color;
+// $cs-nd-tools-height: 46px;
+$cs-nd-legals-padding-top: 5px;
+$cs-nd-legals-height: 32px;
+$cs-nd-subtrahend: $cs-nd-height + (2 * $cs-padding) + $cs-nd-legals-height + $cs-nd-legals-padding-top; // + $cs-nd-tools-height;
 
-$navigation-drawer-background-color: #22222280;
-$navigation-drawer-padding: $app-padding;
-$navigation-drawer-border-width: 2px;
-$navigation-drawer-width-inactive: $navigation-drawer-inner-width-inactive + $navigation-drawer-inner-border-width +
-    $navigation-drawer-inner-padding * 2;
-
-// Buttons
-$button-border: 1px;
-$button-border-radius: 1.5rem;
-$button-background-color: transparent;
-$button-border-color: $secondary-color-darker;
+// Overlay
+$cs-nd-overlay-background: #22222280;

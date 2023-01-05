@@ -15,16 +15,16 @@ defineEmits(["updatePath"]);
 
 <style lang="scss">
 .result-item {
-    border: 2px solid $primary-color;
+    border: 2px solid $cs-primary-color;
     border-radius: 3px;
-    padding: $app-padding;
-    margin: 0 0 $app-padding 0;
+    padding: $cs-padding;
+    margin: 0 0 $cs-padding 0;
     position: relative;
 
     .result-item-header {
         .result-item-title {
             margin: 0;
-            margin: 0 0 $app-padding 0;
+            margin: 0 0 $cs-padding 0;
             font-size: 18px;
             font-weight: 600;
         }
@@ -46,22 +46,22 @@ defineEmits(["updatePath"]);
             margin: 0;
             max-width: 25%;
             overflow: hidden;
-            overflow-x: scroll;
+            overflow-x: auto;
             position: absolute;
-            bottom: $app-padding;
-            right: $app-padding;
+            bottom: $cs-padding;
+            right: $cs-padding;
             font-size: 12px;
             display: flex;
             gap: 4px;
 
             .chip {
-                background-color: $primary-color;
+                background-color: $cs-primary-color;
                 padding: 4px 8px;
                 border-radius: 1rem;
                 text-align: center;
                 white-space: nowrap;
                 width: max-content;
-                color: $white;
+                color: $cs-white;
             }
         }
     }
